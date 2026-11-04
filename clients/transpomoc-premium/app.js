@@ -18,7 +18,7 @@ const articles=[
  ['transport-maszyn-poradnik.html','Jak przygotować maszynę do transportu?','Wymiary, masa i przygotowanie załadunku','Przed zleceniem przewozu przygotuj masę maszyny, jej wymiary i zdjęcia. Zwróć uwagę na warunki dojazdu do miejsca załadunku, możliwość wjazdu na platformę i termin rozładunku. Przy ładunkach ponadgabarytowych uzgodnij formalności i dobór trasy z wykonawcą.'],
  ['wynajem-lawety-poradnik.html','Wynajem lawety — co warto sprawdzić?','Ładowność, uprawnienia i warunki wynajmu','Sprawdź dopuszczalną masę całkowitą zestawu, ładowność, wymiary platformy i sposób zabezpieczenia ładunku. Ustal wymagane uprawnienia kierowcy, dostępność przyczepy, stawkę dobową, kaucję oraz warunki zwrotu.']
 ];
-const a=(u,t,c='')=>'<a href="'+u+'"'+(c?' class="'+c+'"':'')+'>'+t+'</a>';
+const a=(u,t,c='')=>'<a href="'+((window.TPWP&&window.TPWP.routes&&window.TPWP.routes[u])||u)+'"'+(c?' class="'+c+'"':'')+'>'+t+'</a>';
 const eyebrow=t=>'<span class="kicker">'+t+'</span>';
 const btn=(u,t,cls='')=>a(u,t,'button '+cls);
 const panel=(label,title,body,cls='')=>'<section class="section '+cls+'"><div class="wrap">'+eyebrow(label)+'<h2>'+title+'</h2>'+body+'</div></section>';
@@ -59,7 +59,7 @@ const extrasInfo={
 for(const [k,v] of Object.entries(extrasInfo)) {meta[k]=[v[0].toUpperCase()+'<br><em>TRANSPOMOC.</em>',v[1].toUpperCase(),v[2]];site[k]=()=>panel('USŁUGI TRANSPOMOC',v[1].toUpperCase(),'<div class="split"><div><p>'+v[2]+'</p><p>Telefonicznie ustalimy lokalizację, rodzaj awarii lub przewożonego ładunku i możliwość wykonania usługi.</p>'+btn(tel,'ZADZWOŃ '+phone+' ↗')+'</div>'+shot(3,'Pojazd przewożony na lawecie')+'</div>')+panel('INNE USŁUGI','SPRAWDŹ PEŁNĄ OFERTĘ.',regionCards(),'section-dark')+lead();}
 for(const [fn,title,sub,txt] of articles){meta[fn]=[title.toUpperCase(),sub.toUpperCase(),'Poradnik TransPomoc'];site[fn]=()=>panel('BLOG / PORADNIKI',title.toUpperCase(),'<p class="article">'+txt+'</p><p class="fine"></p>'+btn('blog.html','← POWRÓT DO BLOGA'))+lead();}
 site['realizacje.html']=site['galeria.html'];site['wypozyczalnia-lawet-poznan.html']=site['wynajem.html'];
-const path=decodeURIComponent(location.pathname.split('/').pop()||'index.html');const selected=site[path]?path:'index.html',m=meta[selected]||meta['index.html'];
+const path=(window.TPWP&&window.TPWP.page)||decodeURIComponent(location.pathname.split('/').pop()||'index.html');const selected=site[path]?path:'index.html',m=meta[selected]||meta['index.html'];
 document.title=(m[1]||'TransPomoc')+' | TransPomoc';
 const navs=nav.map(([u,t])=>a(u,t,selected===u?'selected':'')).join('');
 const header='<div class="top"><div class="wrap"><span>● POMOC DROGOWA 24/7 • POZNAŃ I OKOLICE</span><span>A2 / S5 / S11 | POLSKA I EUROPA</span></div></div><header><div class="wrap nav">'+a('index.html','TRANS<b>POMOC</b><small>POMOC DROGOWA & TRANSPORT</small>','logo')+'<nav id="menu" aria-label="Menu główne">'+navs+'</nav>'+a(tel,'↗ '+phone,'outlinebtn')+'<button class="toggle" id="toggle" aria-label="Otwórz menu" aria-expanded="false">☰</button></div></header>';
