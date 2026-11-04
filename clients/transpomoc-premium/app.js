@@ -66,4 +66,29 @@ const banner='<section class="hero small-hero"><div class="wrap herowrap">'+eyeb
 const footer='<footer><div class="wrap"><div class="footcols"><div>'+a('index.html','TRANS<b>POMOC</b>','logo')+'<p>Całodobowa pomoc drogowa, transport maszyn i wynajem lawet w Poznaniu, Polsce i Europie.</p></div><div><h4>ODKRYJ</h4>'+nav.map(([u,t])=>a(u,t)).join('')+'</div><div><h4>KONTAKT</h4>'+a(tel,phone)+a('mailto:'+email,email)+'<p>os. Powstań Narodowych 1/14<br>61-213 Poznań</p></div></div><div class="copyright">© 2026 TRANSPOMOC — PODGLĄD DEMONSTRACYJNY • NIEOFICJALNA STRONA.</div></div></footer>'+a(tel,'☎ POMOC DROGOWA 24/7 — ZADZWOŃ','mobile');
 document.getElementById('app').innerHTML=header+banner+site[selected]()+footer;
 document.getElementById('toggle').addEventListener('click',e=>{const nav=document.getElementById('menu');let open=nav.classList.toggle('open');e.target.setAttribute('aria-expanded',String(open));});
+if(selected==='galeria.html'){
+  const grid=document.querySelector('.photo-grid');
+  if(grid){
+    const types=['maszyny','maszyny','maszyny','pojazdy','maszyny','pojazdy'];
+    const list=[...grid.querySelectorAll('.photo-card')];
+    list.forEach((el,i)=>{el.dataset.category=types[i]||'maszyny';el.setAttribute('aria-label','Powiększ zdjęcie '+(i+1));});
+    const filters=document.createElement('div');filters.className='photo-filters';
+    for(const [id,label] of [['all','WSZYSTKIE'],['maszyny','MASZYNY'],['pojazdy','POJAZDY']]){
+      const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.filter=id;
+      if(id==='all')b.classList.add('current');
+      b.addEventListener('click',()=>{filters.querySelectorAll('button').forEach(x=>x.classList.toggle('current',x===b));list.forEach(el=>el.hidden=id!=='all'&&el.dataset.category!==id);});
+      filters.append(b);
+    }
+    grid.before(filters);
+    const overlay=document.createElement('div');overlay.className='photo-lightbox';
+    overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');
+    overlay.innerHTML='<button type="button" aria-label="Zamknij podgląd">×</button><div class="enlarged"></div><p>Realizacja TransPomoc — fotografia z materiałów klienta</p>';
+    document.body.append(overlay);
+    function close(){overlay.classList.remove('visible');}
+    overlay.querySelector('button').addEventListener('click',close);
+    overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+    list.forEach(el=>el.addEventListener('click',e=>{e.preventDefault();const shot=el.querySelector('.client-shot');overlay.querySelector('.enlarged').className='enlarged '+([...shot.classList].find(c=>/^photo[0-9]+$/.test(c))||'photo0');overlay.classList.add('visible');}));
+  }
+}
 })();
